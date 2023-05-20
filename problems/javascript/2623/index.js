@@ -1,23 +1,19 @@
-const memoize = function (func) {
-	const hash = Object.create(null);
-	const nameFunction = func.name;
+/**
+ * Function | HashMap
+ * Задача не вызваала проблем.
+ */
 
-	if (!Object.hasOwn(hash, nameFunction)) {
-		hash[nameFunction] = {};
-	}
+// Speed O(1), Space O(n), n = количество вызовов функции с уникальными аргументами.
+const memoize = function (fn) {
+	const previousArgumentsCollection = Object.create(null);
 
 	return function (...args) {
-		const key = args.toString();
-		if (hash[nameFunction][key] !== undefined) {
-			return hash[nameFunction][key];
+		const key = args.join(',');
+		if (Object.hasOwn(previousArgumentsCollection, key)) {
+			return previousArgumentsCollection[key];
 		}
 
-		hash[nameFunction][key] = func(...args);
-		return hash[nameFunction][key];
+		previousArgumentsCollection[key] = fn(...args);
+		return previousArgumentsCollection[key];
 	};
 };
-
-const sum = function (a, b) {
-	return a + b;
-};
-const memoizeFunction = memoize(sum);
