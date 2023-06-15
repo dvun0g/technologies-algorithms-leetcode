@@ -1,22 +1,41 @@
-// Easy | BFS + Inorder Traversal
-// Задача достаточно простая, но не сразу понял что нужно использовать Inorder Traversal
+// Medium | Tree + BFS
+// Стандартная задача на BFS, можно решить и с помощью DFS, но это сложнее в реализации
 
-// BFS + Inorder Traversal | Done
-const getMinimumDifference = function (root) {
-	let prev = -Infinity;
-	let result = Number.MAX_SAFE_INTEGER;
+// Tree + BFS | Done
+const maxLevelSum = function (root) {
+	let result = 0;
 
-	const dfs = function (node) {
-		if (node === null) {
-			return;
+	const isEmptyTree = root === null;
+	if (isEmptyTree) {
+		return result;
+	}
+
+	const queue = [root];
+	let maximumSum = -Infinity;
+	let currentLevel = 0;
+
+	while (queue.length) {
+		let sumCurrentLevel = 0;
+		const sizeCurrentLevel = queue.length;
+		currentLevel += 1;
+
+		for (let i = 0; i < sizeCurrentLevel; ++i) {
+			const node = queue.shift();
+			sumCurrentLevel += node.val || 0;
+
+			if (node.left !== null) {
+				queue.push(node.left);
+			}
+			if (node.right !== null) {
+				queue.push(node.right);
+			}
 		}
 
-		dfs(node.left);
-		result = Math.min(result, node.val - prev);
-		prev = node.val;
-		dfs(node.right);
-	};
+		if (sumCurrentLevel > maximumSum) {
+			maximumSum = sumCurrentLevel;
+			result = currentLevel;
+		}
+	}
 
-	dfs(root);
 	return result;
 };
